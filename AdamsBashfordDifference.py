@@ -4,7 +4,7 @@ import math
 
 z = input("Enter Equation: ")
 f = input("X final: ")
-i = input("Enter the Iterations: ")
+Iterations = input("Enter the Iterations: ")
 x= input("Enter X: ")
 y= input("Enter Y: ")
 B = input("Enter fix: ")
@@ -15,54 +15,82 @@ y = y.split()
 #step size is equal to different between any two elements in x array
 h = float(x[1]) - float(x[0])
 
-
-#functions to make x and y return floats
-def xf(n):
-    return float(x[n])
-
-def yf(n):
-    return float(y[n])
-
+#Defining sqrt to use it in eval directly
 def sqrt(x):
  return math.sqrt(x)
 
+#To solve the give Function from the User in Eval
 def Function(f,p):
  w= z.replace("x" ,str(f))
  w= w.replace("y" ,str(p))
  w = w.replace("^","**")
  return eval(w)
 
-
+#Make the Function take the index of x ,y in the array 
 def FunctionTaketakesN(n):
  return round(Function(x[n],y[n]),int(B))
 
+#calculating array that contain the function in all x and y
+FuncArray=[]
+for i in range(len(x)):
+    FuncArray.append(FunctionTaketakesN(i)) 
 
-def predictAdams():
-#Predict Function
- 
-
- return L
-
-
-
-def correctAdams():
-#Corrector Function
- 
- return L
+#Calculating The Deltas ex: delta^1 f , delta^2 f ...etc
+#we will loop on array with i where I is not last element in array
+DeltaFunc1 = []
+for i in range(len(FuncArray) -1):
+    DeltaFunc1.append(round(FuncArray[i+1] - FuncArray[i],int(B)))
 
 
-#main function
-#calling predict
-P1 = eval(predict())
+#Doing the Sample but for Delta^2 and ...etc with same Idea
+DeltaFunc2 = []
+for i in range(len(DeltaFunc1) -1):
+    DeltaFunc2.append(round(DeltaFunc1[i+1] - DeltaFunc1[i],int(B)))
+
+DeltaFunc3 = []
+for i in range(len(DeltaFunc2) -1):
+    DeltaFunc3.append(round(DeltaFunc2[i+1] - DeltaFunc2[i],int(B)))
+
+DeltaFunc4 = []
+for i in range(len(DeltaFunc3) -1):
+    DeltaFunc4.append(round(DeltaFunc3[i+1] - DeltaFunc3[i],int(B)))
+
+
+
+
+#Calculating The Predicat Value
+predicat =round(float(y[-1])+h*(FuncArray[-1]+0.5*DeltaFunc1[-1]+5/12*DeltaFunc2[-1] +3/8*DeltaFunc3[-1]+251/720*DeltaFunc4[-1]),int(B))
+
+
+
+#adding it in Last of x and y arrays
 x.append(f)
-y.append(P1)
-C1 = eval(correctF())
-print(correctF())
-y[-1] = C1
+y.append(predicat)
+#calculate the Function of new x and y
+FuncArray.append(FunctionTaketakesN(len(x)-1))
+#add this to all the Deltas
+DeltaFunc1.append(FuncArray[-1]-FuncArray[-2])
+DeltaFunc2.append(DeltaFunc1[-1]-DeltaFunc1[-2])
+DeltaFunc3.append(DeltaFunc2[-1]-DeltaFunc2[-2])
+DeltaFunc4.append(DeltaFunc3[-1]-DeltaFunc3[-2])
 
-for l in range(int(i)):
-    C1 = eval(correctF())
-    y[-1] = C1
+#Corrector Function
+def correctAdams():
+ #calculate the new correct value
+ correct = round(float(y[-2])+h*(FuncArray[-1]-0.5*DeltaFunc1[-1]-1/12*DeltaFunc2[-1] -1/24*DeltaFunc3[-1]-19/720*DeltaFunc4[-1]),int(B))
+ #update the y
+ y[-1] = correct 
+ #calculate the Function of new x and y
+ FuncArray[-1] = FunctionTaketakesN(len(x)-1)
+ #update all the Deltas
+ DeltaFunc1[-1]= FuncArray[-1]-FuncArray[-2]
+ DeltaFunc2[-1]= DeltaFunc1[-1]-DeltaFunc1[-2]
+ DeltaFunc3[-1]= DeltaFunc2[-1]-DeltaFunc2[-2]
+ DeltaFunc4[-1]= DeltaFunc3[-1]-DeltaFunc3[-2]
+  
 
-final = round(y[-1],int(B))
-print(final)
+#calling the Corrector as many Times as the User wanted
+for i in range(int(Iterations)):
+   correctAdams()
+
+print("y(n+1) is : " + str(y[-1]))

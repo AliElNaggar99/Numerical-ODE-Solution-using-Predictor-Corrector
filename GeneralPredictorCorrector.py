@@ -5,8 +5,8 @@ import math
 z = input("Enter Equation: ")
 f = input("X final: ")
 i = input("Enter the Iterations: ")
-x= input("Enter X: ")
-y= input("Enter Y: ")
+x= input("Enter X array: ")
+y= input("Enter Y array: ")
 predictor = input("Enter the Predict Equation: ")
 Corrector = input("Enter the Corrector Equation: ")
 B = input("Enter fix: ")
@@ -25,23 +25,24 @@ def xf(n):
 def yf(n):
     return float(y[n])
 
+#Defining sqrt to use it in eval directly
 def sqrt(x):
  return math.sqrt(x)
 
-def Function(f,p):
- w= z.replace("x" ,str(f))
- w= w.replace("y" ,str(p))
+#To solve the give Function from the User in Eval
+def Function(x,y):
+ w= z.replace("x" ,str(x))
+ w= w.replace("y" ,str(y))
  w = w.replace("^","**")
  return eval(w)
 
-
+#Make the Function take the index of x ,y in the array 
 def FunctionTaketakesN(n):
  return round(Function(x[n],y[n]),int(B))
 
-
-def predict():
 #Predict Function
- 
+def predict():
+
  L = predictor.replace("n",str(len(y)-1))
  L = L.replace("h" , str(h))
  L = L.replace("f","FunctionTaketakesN")
@@ -50,9 +51,8 @@ def predict():
  return L
 
 
-
-def correctF():
 #Corrector Function
+def correctF():
  L = Corrector.replace("n",str(len(y)-2))
  L = L.replace("h" , str(h))
  L = L.replace("f","FunctionTaketakesN")
@@ -63,15 +63,16 @@ def correctF():
 #main function
 #calling predict
 P1 = eval(predict())
+#adding x(n+1) and y(n+1) in the last of the array 
 x.append(f)
 y.append(P1)
 C1 = eval(correctF())
-print(correctF())
 y[-1] = C1
-
+#make the iterations of Correct Function
 for l in range(int(i)):
     C1 = eval(correctF())
     y[-1] = C1
 
 final = round(y[-1],int(B))
-print(final)
+
+print("y(n+1) is: " + str(final))

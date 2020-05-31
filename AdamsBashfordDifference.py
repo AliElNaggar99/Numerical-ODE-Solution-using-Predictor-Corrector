@@ -99,7 +99,7 @@ fix = input("Enter Fix: ")
 #Make an Object from it
 Equation1 = AdamsBashFord(EquationY,finalX,Iterations,x,y,fix)
 
-#calculate the Predicat
+#calculate the final Y
 Equation1.FindFinalY()
 
 print("y(n+1) is : " + str(Equation1.y[-1]))
